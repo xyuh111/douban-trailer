@@ -1,0 +1,23 @@
+{
+  "name": "douban-trailer",
+  "version": "1.0.0",
+  "description": "豆瓣预告片 vue+koa",
+  "main": "index.js",
+  "scripts": {
+	  "start":"node ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xyuh111/douban-trailer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xyuh111/douban-trailer/issues"
+  },
+  "homepage": "https://github.com/xyuh111/douban-trailer#readme",
+  "dependencies": {
+    "koa": "^2.6.2"
+  }
+}
