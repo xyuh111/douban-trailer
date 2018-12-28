@@ -4,7 +4,7 @@
   "description": "豆瓣预告片 vue+koa",
   "main": "index.js",
   "scripts": {
-	  "start":"node ./index.js",
+    "start": "node ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/xyuh111/douban-trailer#readme",
   "dependencies": {
-    "koa": "^2.6.2"
+    "ejs": "^2.6.1",
+    "koa": "^2.6.2",
+    "puppeteer": "^1.11.0-next.1545082503400"
   }
 }
