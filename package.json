@@ -20,6 +20,8 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "koa": "^2.6.2",
-    "puppeteer": "^1.11.0-next.1545082503400"
+    "puppeteer": "^1.11.0-next.1545082503400",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
   }
 }
