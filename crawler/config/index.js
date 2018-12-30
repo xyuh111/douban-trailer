@@ -1,6 +1,6 @@
 module.exports = {
-	accessKey : "rnI****************************GZy",
-	secretKey : "uytC***********************TDVK_h",
+	accessKey : "rnIw********************Ev2aaGZy",
+	secretKey : "uytC8************************K_h",
 	bucket: "imgs",
 	Port: 19110,
 	UptokenUrl: "token", // demo 启动后会在本地 /uptoken 上提供获取 uptoken 的接口，所以这里可以填 'token'
