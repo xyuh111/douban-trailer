@@ -1,11 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const Mixed = Schema.Types.Mixed  // Mixed 可以存储任何类型的数据
+const {ObjectId,Mixed} = Schema.Types // Mixed 可以存储任何类型的数据
 const movieSchema = new Schema({
 	doubanId: {
 		unique: true,
-		type:String
+		type:String,
 	},
+	categoty: {
+        type: ObjectId,
+        ref: 'Movie',
+    },
 	rate: Number,
 	title: String,
 	summary: String,
