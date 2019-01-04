@@ -2,17 +2,20 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const Mixed = Schema.Types.Mixed  // Mixed 可以存储任何类型的数据
 const movieSchema = new Schema({
-	doubanId: String,
+	doubanId: {
+		unique: true,
+		type:String
+	},
 	rate: Number,
-	title: string,
-	summary: string,
-	video: string,
-	poster: string,
-	cover: string,
-	videoKey: string,
-	posterKey: string,
-	coverKey: string,
-	rawTitle: string, //原始标题
+	title: String,
+	summary: String,
+	video: String,
+	poster: String,
+	cover: String,
+	videoKey: String,
+	posterKey: String,
+	coverKey: String,
+	rawTitle: String, //原始标题
 	movieTypes: [String],
 	pubdata: Mixed,   //日期为任意类型
 	yaer: Number,
@@ -20,12 +23,22 @@ const movieSchema = new Schema({
 	meta: {
 		createdAt: {
 			type: Date,
-			default: Data.now()
-		}
+			default: Date.now()
+		},
 		updateAt: {
 			type: Date,
-			default: Data.now()
+			default: Date.now()
 		}
 	}
 })
-mongoose.model("Movie",movieSchema)
+
+// pre方法 就是保存之前。
+movieSchema.pre('save', next => {
+	if (this.isNew) {
+		this.createdAt = this.updateAt = Data.now()
+	} else {
+		this.updateAt = Data.now()
+	}
+	next()
+})
+mongoose.model("Movie", movieSchema)
