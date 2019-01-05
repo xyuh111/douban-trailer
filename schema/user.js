@@ -8,12 +8,12 @@ const LOCK_TIME = 2 * 60 * 60 * 1000; //输错密码 5 次 锁定 2 个小时。
 const userSchema = new Schema({
 	username: { //用户名设置为排他性的，唯一的，不允许重复  unique: true,
 		unique: true,
-		required: true,  // 必须传，不能为空
+		required: true, // 必须传，不能为空
 		type: String,
 	},
 	email: {
 		unique: true,
-		required: true,  // 必须传，不能为空
+		required: true, // 必须传，不能为空
 		type: String,
 	},
 	password: {
@@ -22,7 +22,7 @@ const userSchema = new Schema({
 	},
 	loginAttempts: { //尝试登陆的次数
 		type: Number,
-		required: true,  // 必须传，不能为空
+		required: true, // 必须传，不能为空
 
 	},
 	lockUntil: Number, //锁定时间
@@ -39,12 +39,12 @@ const userSchema = new Schema({
 })
 
 // mongose 提供的虚拟字段， 这个字段不会被真正的存到数据库里面，每一次都会经过get 方法判断
-userSchema.virtual('isLocked').get(() => {
+userSchema.virtual('isLocked').get(function() {
 	// lockUntil 就是要被锁定到什么时候
 	return !!(this.lockUntil && this.lockUntil > Date.now())
 })
 
-userSchema.pre('save', next => {
+userSchema.pre('save',function(next) {
 	if (this.isNew) {
 		this.createdAt = this.updateAt = Date.now()
 	} else {
@@ -53,7 +53,7 @@ userSchema.pre('save', next => {
 	next()
 })
 
-userSchema.pre('save', next => {
+userSchema.pre('save', function (next) {
 	//isModified 方法 是mongose 提供的。 查看 某个 字段有没有被更改。 没有就 return 并跳过后面的环节
 	if (!this.isModified('password')) return next();
 	//bcrypt 是一个加密库   SALT_WORK_FACTOR（盐值） 越大越耗电脑性能 salt 盐
@@ -80,7 +80,7 @@ userSchema.methods = {
 			})
 		})
 	},
-	incLoginAttepts: (user) => {
+	incLoginAttepts: function(user) {
 		return new Promise((resolve, reject) => {
 			if (this.lockUntil && this.lockUntil < Date.now()) {
 				this.update({
@@ -102,7 +102,7 @@ userSchema.methods = {
 				}
 				//登陆错误次数大于 最大登陆次数 ，同时 当前用户没有被锁定，
 				if (this.loginAttempts + 1 >= MAC_LOGIN_ATTEMPTS && !this.isLocked) {
-					updatas.$set = {
+					updates.$set = {
 						lockUntil: Date.now() + LOCK_TIME,
 					}
 				}

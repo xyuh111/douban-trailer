@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const {resolve} = require('path')
-const url = 'mongodb://192.168.174.136:27017/douban-trailer';
+const url = 'mongodb://192.168.174.137:27017/douban-trailer';
 const db = mongoose.connection;
 const glob = require('glob')  //用于匹配目录下的所有 js 文件 这是node 的一个模块，允许使用 * 号
 

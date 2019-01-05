@@ -1,37 +1,100 @@
 const rp = require('request-promise-native')
+const mongoose = require('mongoose')
+const Movie = mongoose.model('Movie')
+const Category = mongoose.model('Category')
 
 async function fetchMovie(item) {
-	const url = `http://api.douban.com/v2/movie/subject/${item.doubanId}
+	const url = `http://api.douban.com/v2/movie/${item.doubanId}
 	`
 	const res = await rp(url)
-	return res
-}
-;(async () => {
-	let movies = [
-		{
-			doubanId: 26611804,
-			title: '三块广告牌',
-			rate: 8.7,
-			poster:
-				'https://img1.doubanio.com/view/photo/l_ratio_poster/public/p2510081688.jpg'
-		},
-		{
-			doubanId: 25716096,
-			title: '狗十三',
-			rate: 8.3,
-			poster:
-				'https://img3.doubanio.com/view/photo/l_ratio_poster/public/p2540513831.jpg'
-		}]
-	movies.map(async movie => {
-		let movieData = await fetchMovie(movie)
-		try{
-			movieData = JSON.parse(movieData)
-			console.log(movieData.tags)
-			console.log(movieData.summary)
-		}
-		catch (err) {
-			console.log(err)
-		}
-		console.log(movieData)
+	let body
+	try {
+		body = JSON.parse(res)
+	} catch (err) {
+		console.log(err)
+	}
+	return body
+};
+(async () => {
+	let movies = await Movie.find({
+		//取出满足这几种情况的数据，因为这些数据不完整
+		$or: [{
+				summary: {
+					$exists: false
+				}
+			},
+			{
+				summary: null
+			},
+			{
+				title: ''
+			},
+			{
+				summary: ''
+			}
+		]
 	})
+	for (let i = 0; i < movies.length; i++) {
+		let movie = movies[i]
+		let movieData = await fetchMovie(movie)
+		if (movieData) {
+			let tags = movieData.tags || []
+			// movie.tags = tags
+			movie.summary = movieData.summary || ''
+			movie.title = movieData.alt_title || movieData.title || ''
+			movie.rawTitle = movieData.title || ''
+
+			if (movieData.attrs) {
+				movie.movieTypes = movieData.attrs.movie_type || []
+				for (let i = 0; i < movie.movieTypes.length; i++) {
+					let item = movie.movieTypes[i]
+					let cat = await Category.findOne({
+						name: item,
+					})
+					if (!cat) {
+						cat = new Category({
+							name: item,
+							movies: [movie._id]
+						})
+					} else {
+						if (cat.movies.indexOf(movie._id) === -1) {
+							cat.movies.push(movie._id)
+						}
+					}
+					console.log(item)
+					console.log(cat)
+					await cat.save()
+					if (!movie.category) {
+						movie.category.push(cat._id)
+					} else {
+						if (movie.category.indexOf(cat._id) === -1) {
+							movie.category.push(cat._id)
+						}
+					}
+				}
+	
+				let dates = movieData.attrs.pubdate || []
+				let pubdates = []
+				dates.map(item => {
+					if (item && item.split('(').length > 0) {
+						let parts = item.split('(')
+						let date = parts[0]
+						let country = '未知'
+						if (parts[1]) {
+							country = parts[1].split(')')[0]
+						}
+						pubdates.push({
+							date: new Date(date),
+							country,
+						})
+					}
+				})
+				movie.pubdate = pubdates
+			}
+			tags.forEach(tag => {
+				movie.tags.push(tag.name)
+			})
+			await movie.save()
+		}
+	}
 })()

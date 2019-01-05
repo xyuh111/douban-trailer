@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const {ObjectId,Mixed} = Schema.Types // Mixed 可以存储任何类型的数据
 const categorySchema = new Schema({
-    doubanId: {
+    name: {
         type: String,
         unique: true
     },
@@ -23,11 +23,11 @@ const categorySchema = new Schema({
 })
 
 // pre方法 就是保存之前。
-categorySchema.pre('save', next => {
+categorySchema.pre('save',function(next) {
     if (this.isNew) {
-        this.createdAt = this.updateAt = Data.now()
+        this.createdAt = this.updateAt = Date.now()
     } else {
-        this.updateAt = Data.now()
+        this.updateAt = Date.now()
     }
     next()
 })

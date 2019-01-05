@@ -6,10 +6,10 @@ const movieSchema = new Schema({
 		unique: true,
 		type:String,
 	},
-	categoty: {
+	category: [{
         type: ObjectId,
-        ref: 'Movie',
-    },
+        ref: 'Category',
+    }],
 	rate: Number,
 	title: String,
 	summary: String,
@@ -21,7 +21,7 @@ const movieSchema = new Schema({
 	coverKey: String,
 	rawTitle: String, //原始标题
 	movieTypes: [String],
-	pubdata: Mixed,   //日期为任意类型
+	pubdate: Mixed,   //日期为任意类型
 	yaer: Number,
 	tags: Array,        //标签，恐怖片、动作片等。。。
 	meta: {
@@ -37,11 +37,11 @@ const movieSchema = new Schema({
 })
 
 // pre方法 就是保存之前。
-movieSchema.pre('save', next => {
+movieSchema.pre('save',function (next){
 	if (this.isNew) {
-		this.createdAt = this.updateAt = Data.now()
+		this.createdAt = this.updateAt = Date.now()
 	} else {
-		this.updateAt = Data.now()
+		this.updateAt = Date.now()
 	}
 	next()
 })
