@@ -22,5 +22,5 @@ postcss.config.js
 ```
 cnpm i cssnext node-sass autoprefixer -D
 
-
-antd@3.0.0 react@16.1.1 react-dom react-router-dom@4.2.2 -S
+#### react
+<!-- antd@3.0.0 react@16.1.1 react-dom react-router-dom@4.2.2 -S -->
