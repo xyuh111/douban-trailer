@@ -18,6 +18,6 @@ export const dev = async app => {
         extension:'html'
     })
     app.use(async (ctx) =>{
-        await ctx.tender(index.html)
+        await ctx.render('index.html')
     })
 }
