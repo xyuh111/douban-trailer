@@ -18,7 +18,10 @@ export class movieController {
         const movies = await getAllMovies(type, year)
     
         //body 直接返回
-        ctx.body = {movies}
+        ctx.body = {
+            success:true,
+            data: movies
+        }
     }
     @get('/:id')
     async getMovieDetail(ctx,next){
